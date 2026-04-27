@@ -20,18 +20,15 @@ pipeline {
             }
         }
 
-        stage('Deploy to Tomcat') {
-            steps {
-                deploy adapters: [
-                    tomcat10(
-                        credentialsId: 'tomcat-cred',
-                        path: '',
-                        url: 'http://35.154.144.83:8080'
-                    )
-                ],
-                contextPath: '',
-                war: 'ROOT.war'
-            }
+       stage('Deploy to Tomcat') {
+    steps {
+        sh '''
+        sudo cp target/ROOT.war /opt/tomcat/webapps/
+        sudo chmod 755 /opt/tomcat/webapps/ROOT.war
+        sudo systemctl restart tomcat
+        '''
+    }
+}
         }
     }
 }
